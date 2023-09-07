@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const port = 5000;
 
-// Route that handles the GET requests
+// GET requests route
 app.get("/api", (req, res) => {
   // Get query parameters
   const slackName = req.query.slack_name;
@@ -22,10 +22,10 @@ app.get("/api", (req, res) => {
 
   // GitHub repository URLs
   const githubFileUrl =
-    "https://github.com/BoltUltra/repo/blob/main/file_name.ext";
-  const githubRepoUrl = "https://github.com/BoltUltra/repo";
+    "https://github.com/BoltUltra/HNG-Backend-Task-1/blob/main/app.js";
+  const githubRepoUrl = "https://github.com/BoltUltra/HNG-Backend-Task-1";
 
-  // Construct the JSON response
+  // JSON response
   const jsonResponse = {
     slack_name: slackName,
     current_day: currentDay,
