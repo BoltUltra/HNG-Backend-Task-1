@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000; // Use the PORT environment variable or 5000 as the default
 
 // GET requests route
 app.get("/api", (req, res) => {
@@ -13,12 +13,16 @@ app.get("/api", (req, res) => {
   const currentDay = currentDate.toLocaleDateString("en-US", {
     weekday: "long",
   });
-  const currentUtcTime = currentDate.toISOString();
+
+  // Format UTC time in "2023-09-07T13:31:46Z" format
+  const formattedUtcTime = currentDate.toISOString().replace(/\.\d{3}Z$/, "Z");
 
   // Calculation of a random offset within +/-2 minutes for UTC time
   const offsetMinutes = Math.floor(Math.random() * 5) - 2;
   currentDate.setMinutes(currentDate.getMinutes() + offsetMinutes);
-  const currentUtcTimeWithOffset = currentDate.toISOString();
+  const currentUtcTimeWithOffset = currentDate
+    .toISOString()
+    .replace(/\.\d{3}Z$/, "Z");
 
   // GitHub repository URLs
   const githubFileUrl =
@@ -29,7 +33,7 @@ app.get("/api", (req, res) => {
   const jsonResponse = {
     slack_name: slackName,
     current_day: currentDay,
-    utc_time: currentUtcTimeWithOffset,
+    utc_time: formattedUtcTime, // Use the formatted UTC time
     track: track,
     github_file_url: githubFileUrl,
     github_repo_url: githubRepoUrl,
