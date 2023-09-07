@@ -2,6 +2,18 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Function to format the current UTC time
+function getCurrentUtcTime() {
+  const currentDate = new Date();
+  const currentMinutes = currentDate.getUTCMinutes();
+  const offsetMinutes = Math.floor(Math.random() * 5) - 2; // Random offset within +/-2 minutes
+  const adjustedMinutes = currentMinutes + offsetMinutes;
+
+  currentDate.setUTCMinutes(adjustedMinutes);
+
+  return currentDate.toISOString().slice(0, -5) + "Z";
+}
+
 // GET requests route
 app.get("/api", (req, res) => {
   // Get query parameters
@@ -14,13 +26,8 @@ app.get("/api", (req, res) => {
     weekday: "long",
   });
 
-  // Format UTC time in "2023-09-07T13:51:08Z" format
-  const formattedUtcTime = currentDate.toISOString().slice(0, -5) + "Z";
-
-  // Calculation of a random offset within +/-2 minutes for UTC time
-  const offsetMinutes = Math.floor(Math.random() * 5) - 2;
-  currentDate.setMinutes(currentDate.getMinutes() + offsetMinutes);
-  const currentUtcTimeWithOffset = currentDate.toISOString().slice(0, -5) + "Z";
+  // Format UTC time within a +/-2 minute window
+  const formattedUtcTime = getCurrentUtcTime();
 
   // GitHub repository URLs
   const githubFileUrl =
@@ -31,7 +38,7 @@ app.get("/api", (req, res) => {
   const jsonResponse = {
     slack_name: slackName,
     current_day: currentDay,
-    utc_time: formattedUtcTime, // Use the formatted UTC time
+    utc_time: formattedUtcTime,
     track: track,
     github_file_url: githubFileUrl,
     github_repo_url: githubRepoUrl,
